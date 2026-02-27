@@ -221,25 +221,7 @@ const App = () => {
         </motion.div>
       </main>
 
-      {/* Footer */}
-      <footer className="relative z-20 w-full p-12 max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center border-t border-white/5 gap-8">
-        <div className="flex items-center gap-3 opacity-30">
-          <span className="text-[10px] font-black uppercase tracking-[0.4em]">Unlink &copy; 2026</span>
-        </div>
-        
-        <p className="text-zinc-600 text-[9px] font-bold uppercase tracking-[1em] absolute left-1/2 -translate-x-1/2 hidden lg:block opacity-20">
-          STAY PRESENT
-        </p>
-
-        <div className="flex items-center gap-8 opacity-40">
-          <span className="text-[9px] font-bold uppercase tracking-widest text-zinc-500">Updates</span>
-          <div className="flex gap-4">
-            <motion.a whileHover={{ scale: 1.1 }} href="#" className="cursor-pointer"><MessageCircle size={18} /></motion.a>
-            <motion.a whileHover={{ scale: 1.1 }} href="#" className="cursor-pointer"><WhatsAppIcon size={18} /></motion.a>
-            <motion.a whileHover={{ scale: 1.1 }} href="#" className="cursor-pointer"><Github size={18} /></motion.a>
-          </div>
-        </div>
-      </footer>
+     
     </div>
   );
 };
