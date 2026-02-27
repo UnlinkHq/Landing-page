@@ -113,11 +113,8 @@ const App = () => {
         className="relative z-20 w-full p-8 flex justify-between items-center max-w-7xl mx-auto"
       >
         <div className="flex items-center gap-4">
-          <div className="w-10 h-10 flex items-center justify-center text-white">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="w-full h-full">
-              <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
-              <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
-            </svg>
+          <div className="w-12 h-12 flex items-center justify-center">
+            <img src="/icon.png" alt="Unlink - The leading screen time tracker and Opal alternative" className="w-full h-full object-contain" />
           </div>
           <span className="text-2xl font-black tracking-tighter uppercase italic leading-none">Unlink</span>
         </div>
@@ -149,8 +146,8 @@ const App = () => {
             transition={{ delay: 0.4 }}
             className="text-white text-xl sm:text-3xl font-light max-w-3xl mx-auto leading-tight"
           >
-            Effortless way to reduce your <br className="hidden sm:block" />
-            phone usage by <span className="font-bold">40%</span>
+            The effortless <strong className="font-bold">digital detox</strong> to reduce your <br className="hidden sm:block" />
+            phone usage by <span className="font-bold">40%</span>. Reclaim your focus today.
           </motion.p>
         </motion.div>
 
@@ -198,7 +195,47 @@ const App = () => {
         </motion.div>
       </main>
 
-     
+      {/* SEO FAQ Section */}
+      <section className="relative z-10 w-full max-w-4xl mx-auto px-6 py-24 border-t border-white/5">
+        <h2 className="text-4xl sm:text-5xl font-bold tracking-tighter mb-12 text-center">Frequently Asked Questions</h2>
+        <div className="grid gap-8">
+          <div className="group p-8 rounded-3xl bg-white/2 border border-white/5 hover:border-white/10 transition-all">
+            <h3 className="text-xl font-bold mb-3 text-white">How to reduce screen time effectively?</h3>
+            <p className="text-zinc-500 leading-relaxed font-light">
+              Reducing screen time requires more than just willpower. <span className="text-zinc-300">Unlink</span> provides a structured <strong>digital detox</strong> by breaking the dopamine loop associated with infinite scrolling apps, helping users reclaim up to 2 hours of their day.
+            </p>
+          </div>
+          <div className="group p-8 rounded-3xl bg-white/2 border border-white/5 hover:border-white/10 transition-all">
+            <h3 className="text-xl font-bold mb-3 text-white">Why is Unlink an elite Opal alternative?</h3>
+            <p className="text-zinc-500 leading-relaxed font-light">
+              Unlike generic screen time trackers, Unlink is built for deep focus. It uses a <strong>privacy-first</strong> approach to analyze usage patterns and proactively nudge you towards productive habits, making it the premier choice for serious focus.
+            </p>
+          </div>
+          <div className="group p-8 rounded-3xl bg-white/2 border border-white/5 hover:border-white/10 transition-all">
+            <h3 className="text-xl font-bold mb-3 text-white">Can I break my phone addiction with an app?</h3>
+            <p className="text-zinc-500 leading-relaxed font-light">
+              Yes, by using tools like Unlink that leverage behavioral science to increase "friction" for distracting apps. Our system is designed to reduce phone usage by <strong>40%</strong> within the first 30 days of use.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Footer Socials - Highly Visible */}
+      <footer className="relative z-10 w-full p-12 border-t border-white/5 mt-auto">
+        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-8">
+          <div className="flex flex-col items-center sm:items-start gap-2">
+            <span className="text-xs uppercase tracking-[0.3em] font-bold opacity-30">Unlink &copy; 2026</span>
+            <span className="text-xs font-medium text-zinc-500">
+              Crafted by <a href="https://shahil-ef7d1.web.app/" target="_blank" rel="noopener noreferrer" className="text-zinc-300 hover:text-white transition-colors">Shahil</a>
+            </span>
+          </div>
+          <div className="flex items-center gap-8">
+            <motion.a whileHover={{ scale: 1.1, color: "#fff" }} href="#" target="_blank" className="text-zinc-500 transition-colors cursor-pointer"><MessageCircle size={18} /></motion.a>
+            <motion.a whileHover={{ scale: 1.1, color: "#fff" }} href="#" target="_blank" className="text-zinc-500 transition-colors cursor-pointer"><WhatsAppIcon size={18} /></motion.a>
+            <motion.a whileHover={{ scale: 1.1, color: "#fff" }} href="https://github.com/shahil-kv" target="_blank" rel="noopener noreferrer" className="text-zinc-500 transition-colors cursor-pointer"><Github size={18} /></motion.a>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 };
