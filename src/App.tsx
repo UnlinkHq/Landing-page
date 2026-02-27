@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Toaster, toast } from 'sonner';
 import { Mail, ArrowRight, Github, MessageCircle } from 'lucide-react';
+import { supabase } from './supabaseClient';
 
 // Custom WhatsApp Icon
 const WhatsAppIcon = ({ size = 20 }: { size?: number }) => (
@@ -13,45 +14,6 @@ const WhatsAppIcon = ({ size = 20 }: { size?: number }) => (
 const App = () => {
   const [email, setEmail] = useState('');
   const [isHovered, setIsHovered] = useState(false);
-  const [emails, setEmails] = useState<string[]>([]);
-
-  // Load emails from localStorage on mount
-  useEffect(() => {
-    const savedEmails = localStorage.getItem('unlink_waitlist');
-    if (savedEmails) {
-      try {
-        const parsed = JSON.parse(savedEmails);
-        if (Array.isArray(parsed)) setEmails(parsed);
-      } catch (e) {
-        console.error("Failed to parse emails", e);
-      }
-    }
-  }, []);
-
-  // Expose admin command to the console
-  useEffect(() => {
-    (window as any).showUnlinkWaitlist = () => {
-      const savedEmails = localStorage.getItem('unlink_waitlist');
-      const list = savedEmails ? JSON.parse(savedEmails) : [];
-      if (list.length === 0) {
-        console.log("%c Unlink Admin %c No signups yet.", "background: #fff; color: #000; font-weight: bold; padding: 2px 5px; border-radius: 3px;", "color: #888;");
-        return;
-      }
-      console.log("%c Unlink Waitlist %c Found " + list.length + " signups:", "background: #fff; color: #000; font-weight: bold; padding: 2px 5px; border-radius: 3px;", "color: #fff;");
-      console.table(list);
-      
-      const csvContent = "data:text/csv;charset=utf-8,Email\n" + list.join("\n");
-      const encodedUri = encodeURI(csvContent);
-      const link = document.createElement("a");
-      link.setAttribute("href", encodedUri);
-      link.setAttribute("download", "unlink_waitlist_export.csv");
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-    };
-    
-    console.log("%c Admin Note %c Run showUnlinkWaitlist() to export signups.", "color: #555; font-size: 10px;", "color: #333; font-size: 10px;");
-  }, []);
 
   const validateEmail = (email: string) => {
     return String(email)
@@ -61,7 +23,7 @@ const App = () => {
       );
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!validateEmail(email)) {
       toast.error("Invalid email address", {
@@ -70,13 +32,28 @@ const App = () => {
       return;
     }
 
-    const newEmails = [...emails, email];
-    setEmails(newEmails);
-    localStorage.setItem('unlink_waitlist', JSON.stringify(newEmails));
+    const toastId = toast.loading('Connecting to Unlink Cloud...');
+
+    const { error } = await supabase
+      .from('waitlist')
+      .insert([{ email }]);
+
+    if (error) {
+      if (error.code === '23505') { // Unique violation
+        toast.error('You are already on the list!', { id: toastId });
+      } else {
+        toast.error('Connection failed. Please try again.', { id: toastId });
+        console.error('Supabase error:', error);
+      }
+      return;
+    }
+
     toast.success('Waitlist Updated', {
+      id: toastId,
       description: "You've successfully joined Unlink.",
       className: "bg-white text-black border-none font-sans px-4 py-2",
     });
+    
     setEmail('');
   };
 
@@ -186,7 +163,7 @@ const App = () => {
         >
           <form 
             onSubmit={handleSubmit}
-            className="group relative flex flex-col sm:flex-row items-stretch gap-3 p-1 rounded-[2.2rem] bg-white/[0.03] border border-white/10 focus-within:border-white/30 transition-all duration-500"
+            className="group relative flex flex-col sm:flex-row items-stretch gap-3 p-1 rounded-[2.2rem] bg-white/3 border border-white/10 focus-within:border-white/30 transition-all duration-500"
           >
             <div className="relative flex-1">
               <Mail className="absolute left-6 top-1/2 -translate-y-1/2 text-zinc-600 group-focus-within:text-white transition-colors" size={20} />
@@ -205,7 +182,7 @@ const App = () => {
               onMouseLeave={() => setIsHovered(false)}
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              className="bg-white text-black font-black px-12 py-5 sm:py-0 rounded-[2rem] flex items-center justify-center gap-3 transition-all hover:bg-zinc-200"
+              className="bg-white text-black font-black px-12 py-5 sm:py-0 rounded-4xl flex items-center justify-center gap-3 transition-all hover:bg-zinc-200"
             >
               <span className="text-sm uppercase tracking-[0.2em]">Join</span>
               <motion.div animate={{ x: isHovered ? 4 : 0 }}>
