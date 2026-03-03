@@ -58,7 +58,7 @@ const App = () => {
   };
 
   return (
-    <div className="h-screen w-full bg-[#050505] text-white font-sans selection:bg-white selection:text-black overflow-hidden relative flex flex-col">
+    <div className="min-h-screen w-full bg-[#050505] text-white font-sans selection:bg-white selection:text-black overflow-x-hidden relative flex flex-col">
       <Toaster position="top-center" richColors />
       
       {/* Texture Layer */}
