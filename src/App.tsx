@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Toaster, toast } from 'sonner';
 import { Mail, ArrowRight, Github, MessageCircle } from 'lucide-react';
-import { supabase } from './supabaseClient';
+import { databases, APPWRITE_DATABASE_ID, APPWRITE_COLLECTION_ID, ID } from './appwriteClient';
 
 // Custom WhatsApp Icon
 const WhatsAppIcon = ({ size = 20 }: { size?: number }) => (
@@ -34,27 +34,33 @@ const App = () => {
 
     const toastId = toast.loading('Connecting to Unlink Cloud...');
 
-    const { error } = await supabase
-      .from('waitlist')
-      .insert([{ email }]);
+    try {
+      if (!APPWRITE_DATABASE_ID || !APPWRITE_COLLECTION_ID) {
+        throw new Error("Missing Appwrite credentials. Please check .env.local");
+      }
 
-    if (error) {
-      if (error.code === '23505') { // Unique violation
+      await databases.createDocument(
+        APPWRITE_DATABASE_ID,
+        APPWRITE_COLLECTION_ID,
+        ID.unique(),
+        { email }
+      );
+
+      toast.success('Waitlist Updated', {
+        id: toastId,
+        description: "You've successfully joined Unlink.",
+        className: "bg-white text-black border-none font-sans px-4 py-2",
+      });
+      
+      setEmail('');
+    } catch (error: any) {
+      if (error.code === 409) { // Unique violation
         toast.error('You are already on the list!', { id: toastId });
       } else {
         toast.error('Connection failed. Please try again.', { id: toastId });
-        console.error('Supabase error:', error);
+        console.error('Appwrite error:', error);
       }
-      return;
     }
-
-    toast.success('Waitlist Updated', {
-      id: toastId,
-      description: "You've successfully joined Unlink.",
-      className: "bg-white text-black border-none font-sans px-4 py-2",
-    });
-    
-    setEmail('');
   };
 
   return (
